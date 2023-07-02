@@ -3,7 +3,7 @@ import { currentTabStore, tabStore } from './stores';
 import type { ITab } from './types';
 import { goto } from '$app/navigation';
 import { get } from 'svelte/store';
-import { isEqual } from 'lodash';
+import { isEqual } from 'lodash-es';
 
 export function addTab(newTab: ITab) {
 	tabStore.update((tabs) => {

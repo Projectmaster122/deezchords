@@ -31,7 +31,7 @@
 	import ServerAccordionItem from '$lib/ServerAccordionItem.svelte';
 	import { sharedAxisTransition } from '$lib/transitions/animation';
 	import { addTab, commonTabs, registerTabShiz } from '$lib/tabs';
-	import { isEqual } from 'lodash';
+	import { isEqual } from 'lodash-es';
 	import { draggable } from '@neodrag/svelte';
 	import cdnUserAvatar from '$lib/api/cdn/userAvatar';
 	import { generatePfpInitials } from '$lib/api/custom/initials';
