@@ -1,7 +1,9 @@
 import { loadingStore, settingsStore, tokenStore } from '$lib/stores';
+import { toastStore } from '@skeletonlabs/skeleton';
 import axios from 'axios';
 import type { AxiosHeaders } from 'axios';
 import { get } from 'svelte/store';
+import req from '$lib/api/custom/calls';
 
 export default async function request<Response>(
 	method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH',
@@ -12,7 +14,7 @@ export default async function request<Response>(
 	headers?: AxiosHeaders,
 	customToken?: string
 ): Promise<{ resp: Response; fail: boolean }> {
-	const progressToken = crypto.randomUUID();
+	const progressToken = 'blah'; //crypto.randomUUID(); TODO: use uuid
 	try {
 		const response = await axios.request({
 			method,
@@ -54,6 +56,20 @@ export default async function request<Response>(
 				});
 			}
 		});
+
+		console.log(response.headers);
+		if (response.status === 429 || response.headers['x-ratelimit-remaining'] <= 2) {
+			const dur = response.headers['x-ratelimit-reset-after'] as number;
+			setTimeout(() => {
+				toastStore.trigger({
+					message: `Too many requests, waiting ${dur}s.`,
+					background: 'variant-filled-warning',
+					timeout: dur * 1000,
+					hideDismiss: true
+				});
+			}, dur);
+			request<Response>(method, url, details, params, data, headers, customToken);
+		}
 
 		const resp = { resp: response.data, fail: false };
 		if (get(settingsStore).debug) console.dir(resp);

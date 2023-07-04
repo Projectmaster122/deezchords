@@ -102,5 +102,10 @@
 		"track",
 		"width",
 		"zIndex"
+	],
+	"cSpell.words": [
+		"Sium",
+		"systray",
+		"zenity"
 	]
 }

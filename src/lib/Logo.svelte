@@ -14,6 +14,9 @@
 </script>
 
 <button on:click={() => dispatch('click')}>
+	<!--
+		Meet Roji, the Logo. She's very friendly!
+	-->
 	<svg viewBox="-1.5 -3 10 10" class={size} xmlns="http://www.w3.org/2000/svg">
 		{#if loaded}
 			<path

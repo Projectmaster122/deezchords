@@ -2,7 +2,6 @@
 	import Icon from '$lib/Icon.svelte';
 	import cdnUserAvatar from '$lib/api/cdn/userAvatar';
 	import { generatePfpInitials } from '$lib/api/custom/initials';
-	import type { IgetThisUser } from '$lib/api/v10/global/getThisUser';
 	import getThisUser from '$lib/api/v10/global/getThisUser';
 	import tokenValid from '$lib/api/v10/global/tokenValid';
 	import { getPromiseFromEvent, sleep } from '$lib/common';
@@ -16,15 +15,17 @@
 		Step,
 		Stepper,
 		Avatar,
-		modalStore
+		modalStore,
+		CodeBlock
 	} from '@skeletonlabs/skeleton';
 	import AccountCard from './AccountCard.svelte';
 
 	currentTabStore.set(commonTabs.signIn);
 
 	let loginMethod = 0;
-
 	let token = '';
+
+	let loginToken = '';
 	let prefix = '';
 	// ---
 	let storageToken = $tokenStore[1] || '';
@@ -35,21 +36,20 @@
 		validToken = false;
 		switch (loginMethod) {
 			case 0:
-				tokenValid(`${prefix} ${token}`).then((isValid) => {
-					if (!isValid) return;
-					validToken = true;
-				});
+				token = `${prefix} ${loginToken}`;
 				break;
 			case 1:
-				tokenValid(storageToken).then((isValid) => {
-					if (!isValid) return;
-					validToken = true;
-				});
+				token = storageToken;
 				break;
 
 			default:
 				break;
 		}
+		if (token !== '')
+			tokenValid(token).then((isValid) => {
+				if (!isValid) return;
+				validToken = true;
+			});
 	}
 </script>
 
@@ -65,7 +65,7 @@
 			}}
 		>
 			<Step locked={!validToken}>
-				<svelte:fragment slot="header">Sign in</svelte:fragment>
+				<svelte:fragment slot="header">Account manager</svelte:fragment>
 				{#if $tokenStore.length >= 1}
 					<aside class="alert variant-ghost-warning max-w-2xl">
 						<div class="alert-message">
@@ -86,6 +86,10 @@
 						<svelte:fragment slot="lead"><Icon icon={mdiDatabase} /></svelte:fragment>
 						<span>Storage</span></Tab
 					>
+					<Tab bind:group={loginMethod} name="storage" value={2}>
+						<svelte:fragment slot="lead"><Icon icon={mdiDatabase} /></svelte:fragment>
+						<span>Delete</span></Tab
+					>
 					<svelte:fragment slot="panel">
 						<div class="flex flex-col gap-2">
 							{#if loginMethod === 0}
@@ -103,39 +107,47 @@
 										type="password"
 										class="input variant-form-material"
 										on:input={() => (validToken = false)}
-										bind:value={token}
+										bind:value={loginToken}
 										placeholder="Token"
 									/>
 								</div>
 							{:else if loginMethod === 1}
 								<p>Select an account to sign in.</p>
+								<AccountCard token={$tokenStore[0] || ''} current />
 								<div class="grid grid-cols-2 gap-1">
-									{#each $tokenStore as to, i}
-										{#if i !== 0}
-											<button
-												on:click={() => {
-													storageToken = to;
-												}}
-											>
-												<AccountCard selected={storageToken === to} token={to} />
-											</button>
-										{:else}
-											<AccountCard token={to} current />
-										{/if}
+									{#each $tokenStore.splice(1) as to, i}
+										<button
+											on:click={() => {
+												storageToken = to;
+											}}
+										>
+											<AccountCard selected={storageToken === to} token={to} />
+										</button>
 									{:else}
 										<div
 											class="flex row-span-2 gap-4 justify-center items-center card variant-ghost-error p-4"
 										>
-											No users currently logged in.
+											Add another user to switch.
 										</div>
 									{/each}
 								</div>
+							{:else if loginMethod === 2}
+								<button
+									on:click={() => {
+										localStorage.clear();
+									}}
+									class="btn variant-filled-secondary">Delete all</button
+								>
 							{/if}
 						</div>
 					</svelte:fragment>
 				</TabGroup>
 			</Step>
-			<Step buttonBackLabel="Not me!" buttonBack={refreshing ? 'invisible' : 'anchor'} buttonComplete="hidden">
+			<Step
+				buttonBackLabel="Not me!"
+				buttonBack={refreshing ? 'invisible' : 'anchor'}
+				buttonComplete="hidden"
+			>
 				<svelte:fragment slot="header">Use this account?</svelte:fragment>
 				<div class="flex flex-col gap-1">
 					{#if $tokenStore.some((t) => t === storageToken)}

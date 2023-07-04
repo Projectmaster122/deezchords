@@ -1,5 +1,5 @@
-export default function cdnUserAvatar(userId: string, avatarHash: string) {
-	return `https://cdn.discordapp.com/avatars/${userId}/${avatarHash}.${
-		!avatarHash.startsWith('a_') ? 'png' : 'gif'
+export default function cdnUserAvatar(userId: string, hash: string) {
+	return `https://cdn.discordapp.com/avatars/${userId}/${hash}.${
+		!hash.startsWith('a_') ? 'png' : 'gif'
 	}`;
 }

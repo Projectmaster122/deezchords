@@ -18,7 +18,7 @@
 	const dispatch = createEventDispatcher();
 
 	// Types
-	import type { CssClasses } from '@skeletonlabs/skeleton';
+	import { Avatar, type CssClasses } from '@skeletonlabs/skeleton';
 
 	// Props (state)
 	/** Set open by default on load. */
@@ -69,6 +69,8 @@
 	export let banner: string = getContext('banner');
 	/** Provide profile image. */
 	export let profile: string = getContext('profile');
+	/** Provide initials as profile image fallback. */
+	export let initials: string = getContext('initials');
 
 	// Change open behavior based on auto-collapse mode
 	function setActive(event?: Event): void {
@@ -116,7 +118,7 @@
 	<!-- Control -->
 	<button
 		type="button"
-		class="accordion-control h-32 bg-no-repeat bg-cover {classesControl}"
+		class="accordion-control {banner ? 'aspect-[16/9]' : 'aspect-[64/27]'} bg-no-repeat bg-cover {classesControl}"
 		style="background-image: linear-gradient(rgba(0, 0, 0, {banner
 			? 0.7
 			: 0.1}), rgba(0, 0, 0, {banner ? 0.7 : 0.1})), url({banner});"
@@ -133,11 +135,10 @@
 		<!-- Lead -->
 		<div class="accordion-lead">
 			<!-- svelte-ignore a11y-img-redundant-alt -->
-			<img
+			<Avatar
 				src={profile}
-				class="rounded-token"
 				loading="lazy"
-				alt="Profile picture"
+				{initials}
 			/>
 		</div>
 		<!-- Summary -->
