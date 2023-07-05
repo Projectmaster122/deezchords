@@ -22,7 +22,7 @@ export const tabStore = writable<ITab[]>([
 		icon: mdiPound,
 		context: {
 			image:
-				'https://cdn.discordapfindp.com/icons/567141138021089308/a_81383668fc9dd8988437cf9346db9f78.gif?size=48',
+				'https://cdn.discordapp.com/icons/567141138021089308/a_81383668fc9dd8988437cf9346db9f78.gif?size=48',
 			text: 'The Doug District',
 			sub: 'Text channel'
 		},

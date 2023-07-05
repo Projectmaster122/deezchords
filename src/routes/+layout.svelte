@@ -59,7 +59,7 @@
 	import getGuildChannels from '$lib/api/v10/guilds/getGuildChannels';
 	import { EChannelType, EDNChannelType, EIChannelType } from '$lib/api/types/channel';
 	import { blur } from 'svelte/transition';
-	import { addToSearch, inlineFunc, validUrl } from '$lib/common';
+	import { addToSearch, inlineFunc, sleep, validUrl } from '$lib/common';
 	import fuzzysort from 'fuzzysort';
 
 	afterNavigate((params: any) => {
@@ -165,7 +165,7 @@
 		});
 	}
 
-	$: filteredSearch = fuzzysort.go(search, $searchStore, { keys: ['title', 'subtitle'] });
+	$: filteredSearch = fuzzysort.go(search, $searchStore, { keys: ['title', 'subtitle'], all: true, limit: 512 });
 </script>
 
 <svelte:head>
@@ -339,8 +339,8 @@
 					</div>
 				{:then guilds}
 					{#if guilds}
-						{#each guilds as guild, i}
-							{#await getGuild({ guildId: guild.id }) then guild}
+						{#each guilds as g, i}
+							{#await getGuild({ guildId: g.id }) then guild}
 								{#if guild && inlineFunc(() => {
 										addToSearch( { title: guild.name, subtitle: `${guild.approximate_presence_count} out of ${guild.approximate_member_count} online`, url: `/guild/${guild.id}`, icon: guild.icon ? cdnGuildIcon(guild.id, guild.icon) : mdiServer } );
 									})}
@@ -364,28 +364,33 @@
 															</div>
 														{:then gServers}
 															{#if gServers}
-																{#each gServers as channel, iC}
-																	<li in:blur={{ delay: 20 * iC }}>
-																		<a
-																			href="/joinGuild"
-																			class={$currentTabStore.url === commonTabs.joinGuild.url
-																				? '!bg-primary-50-900-token'
-																				: ''}
-																		>
-																			<span
-																				><Icon
-																					icon={EIChannelType[channel.type] ||
-																						mdiHelpRhombusOutline}
-																				/></span
+																{#each gServers.sort((a, b) => (a.position || 0) - (b.position || 0)) as channel, iC}
+																	{#if inlineFunc(() => {
+																		addToSearch( { title: channel.name || '[No name]', subtitle: `in ${guild.name}`, url: `/guildChannel/${guild.id}/${channel.id}`, icon: EIChannelType[channel.type] || mdiHelpRhombusOutline } );
+																	})}
+																		<li in:blur={{ delay: 20 * iC }}>
+																			<a
+																				href="/guildChannel/{guild.id}/{channel.id}"
+																				class="{$currentTabStore.url[0] ===
+																				`/guildChannel/${guild.id}/${channel.id}`
+																					? '!bg-primary-50-900-token'
+																					: ''}"
 																			>
-																			<span class="flex-auto">
-																				<dt class="font-bold">{channel.name || '[No name]'}</dt>
-																				<dd class="text-sm opacity-50">
-																					{EDNChannelType[channel.type] || 'Channel'}
-																				</dd>
-																			</span>
-																		</a>
-																	</li>
+																				<span
+																					><Icon
+																						icon={EIChannelType[channel.type] ||
+																							mdiHelpRhombusOutline}
+																					/></span
+																				>
+																				<span class="flex-auto">
+																					<dt class="font-bold truncate">{channel.name || '[No name]'}</dt>
+																					<dd class="text-sm opacity-50 truncate">
+																						{channel.nsfw ? 'Channel is NSFW!': ''}
+																					</dd>
+																				</span>
+																			</a>
+																		</li>
+																	{/if}
 																{/each}
 															{/if}
 														{/await}
@@ -394,6 +399,12 @@
 											</svelte:fragment>
 										</ServerAccordionItem>
 									</div>
+								{:else}
+									{#await sleep(5 * 1000) then _}
+										<div class="card variant-ghost-error p-2">
+											{g.name} isn't working right now.
+										</div>
+									{/await}
 								{/if}
 							{/await}
 						{/each}

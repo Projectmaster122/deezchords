@@ -142,7 +142,7 @@
 			/>
 		</div>
 		<!-- Summary -->
-		<div class="accordion-summary flex-1">
+		<div class="accordion-summary flex-1 truncate">
 			<slot name="summary">(summary)</slot>
 		</div>
 		<!-- Caret -->
