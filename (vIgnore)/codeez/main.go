@@ -45,7 +45,7 @@ func main() {
 	finalHash := strings.Replace(base64.URLEncoding.EncodeToString(preFinalHash[:]), "=", "", -1)
 
 	log.Info("Created", "hash", finalHash)
-	browser.OpenURL("http://87.152.162.129:5173/dev/codes/" + finalHash)
+	browser.OpenURL("http://87.152.162.129:5173/dev/codes/" + finalHash) // TODO: select origin url
 }
 
 func getUser(options ...zenity.Option) (user string, pass string) {

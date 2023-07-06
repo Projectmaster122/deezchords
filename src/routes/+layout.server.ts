@@ -13,26 +13,30 @@ export const load = ({ route, cookies }) => {
 		};
 	}
 
-	if (route.id === '/dev/codes')
+	if (route.id === '/dev/codes' || route.id === '/dev/codes/[code]')
 		return {
 			status: 200
 		};
 
 	const devCookie = cookies.get('dev');
+	console.log(devCookie);
 	if (!devCookie) throw redirect(303, '/dev/codes?r=auth');
 
+	console.log(devCookie);
 	dayjs.extend(utc);
 	if (
 		JSON.parse(env.DEV_CODES).some(
-			(item: string) =>
-				fromUint8Array(
+			(item: string) => {
+				console.log(devCookie)
+				return fromUint8Array(
 					sha256(
 						new TextEncoder().encode(
 							item + dayjs.utc().format('YYYYMMDDHH').split('').join('fuck you mr hacker')
 						)
 					),
 					true
-				) === devCookie
+				) === devCookie;
+			}
 		)
 	) {
 		return {
@@ -40,5 +44,5 @@ export const load = ({ route, cookies }) => {
 		};
 	}
 
-	throw redirect(303, '/dev/codes?r=auth');
+	throw redirect(303, '/dev/codes?r=invalid');
 };

@@ -33,6 +33,15 @@
 					this build won't be of any use to you.
 				</p>
 			</Step>
+			{:else if data.ref === 'invalid'}
+			<Step>
+				<svelte:fragment slot="header">Hol' up.</svelte:fragment>
+				<p>
+					The build you're using is a development build and requires the use of a developer hash.
+					You've been redirected here because signed in using a hash, but it is invalid. Did it
+					expire? You can create a new one, or use Codeez to log back in.
+				</p>
+			</Step>
 			{/if}
 			<Step locked={!(user && pass && pass.length > 8)}>
 				<svelte:fragment slot="header">Create developer hash</svelte:fragment>
