@@ -14,7 +14,7 @@
 		</p>
 		<div class="flex p-1 gap-2 justify-center items-center">
 			<a href="/proxy/download" class="btn variant-filled-primary">Download</a>
-			<button on:click={() => (ed('retry'))} class="anchor">Retry</button>
+			<button on:click={() => ed('retry')} class="anchor">Retry</button>
 		</div>
 	</div>
 </aside>

@@ -1,8 +1,8 @@
-import type { IChannel } from "./channel";
-import type { IEmoji, ISticker } from "./emoji";
-import type { IRole } from "./role";
-import type { IUser } from "./user";
-import type { IWelcomeScreen } from "./welcomeScreen";
+import type { IChannel } from './channel';
+import type { IEmoji, ISticker } from './emoji';
+import type { IRole } from './role';
+import type { IUser } from './user';
+import type { IWelcomeScreen } from './welcomeScreen';
 
 export interface IGuild {
 	id: string;
@@ -66,16 +66,16 @@ export interface IInvite {
 }
 
 export interface IGuildMember {
-  user?: IUser;
-  nick?: string | null;
-  avatar?: string | null;
-  roles: string[];
-  joined_at: string;
-  premium_since?: string | null;
-  deaf: boolean;
-  mute: boolean;
-  flags: number;
-  pending?: boolean;
-  permissions?: string;
-  communication_disabled_until?: string | null;
+	user?: IUser;
+	nick?: string | null;
+	avatar?: string | null;
+	roles: string[];
+	joined_at: string;
+	premium_since?: string | null;
+	deaf: boolean;
+	mute: boolean;
+	flags: number;
+	pending?: boolean;
+	permissions?: string;
+	communication_disabled_until?: string | null;
 }

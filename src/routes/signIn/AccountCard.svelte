@@ -41,7 +41,11 @@
 			>
 			<span class="flex flex-col items-start">
 				<dt class="font-bold">{user.global_name || '[No name]'}</dt>
-				<dd class="text-sm opacity-50">{current ? 'Current: ' : ''}@{user.username}{Number(user.discriminator) !== 0 ? `#${user.discriminator}` : ''}</dd>
+				<dd class="text-sm opacity-50">
+					{current ? 'Current: ' : ''}@{user.username}{Number(user.discriminator) !== 0
+						? `#${user.discriminator}`
+						: ''}
+				</dd>
 			</span>
 		</div>
 	{:else}

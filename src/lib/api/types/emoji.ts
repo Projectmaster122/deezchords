@@ -1,5 +1,5 @@
-import type { IRole } from "./role";
-import type { IUser } from "./user";
+import type { IRole } from './role';
+import type { IUser } from './user';
 
 export interface IEmoji {
 	id?: string | null;

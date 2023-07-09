@@ -118,7 +118,9 @@
 	<!-- Control -->
 	<button
 		type="button"
-		class="accordion-control {banner ? 'aspect-[16/9]' : 'aspect-[64/27]'} bg-no-repeat bg-cover {classesControl}"
+		class="accordion-control {banner
+			? 'aspect-[16/9]'
+			: 'aspect-[64/27]'} bg-no-repeat bg-cover {classesControl}"
 		style="background-image: linear-gradient(rgba(0, 0, 0, {banner
 			? 0.7
 			: 0.1}), rgba(0, 0, 0, {banner ? 0.7 : 0.1})), url({banner});"
@@ -135,11 +137,7 @@
 		<!-- Lead -->
 		<div class="accordion-lead">
 			<!-- svelte-ignore a11y-img-redundant-alt -->
-			<Avatar
-				src={profile}
-				loading="lazy"
-				{initials}
-			/>
+			<Avatar src={profile} loading="lazy" {initials} />
 		</div>
 		<!-- Summary -->
 		<div class="accordion-summary flex-1 truncate">

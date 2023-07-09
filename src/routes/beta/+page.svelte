@@ -9,7 +9,14 @@
 	import { generateRandomBool, getPromiseFromEvent, getRandomString, sleep } from '$lib/common';
 	import { currentTabStore, tokenStore } from '$lib/stores';
 	import { commonTabs } from '$lib/tabs';
-	import { mdiClose, mdiDatabase, mdiKey, mdiSpeedometer, mdiStepForward, mdiStepForward2 } from '@mdi/js';
+	import {
+		mdiClose,
+		mdiDatabase,
+		mdiKey,
+		mdiSpeedometer,
+		mdiStepForward,
+		mdiStepForward2
+	} from '@mdi/js';
 	import {
 		TabGroup,
 		Tab,
@@ -68,7 +75,9 @@
 			class="input variant-form-material {generateRandomBool(percentage, user, feature, result)
 				? 'variant-ghost-success'
 				: ''}"
-			bind:value={percentage} min="0" max="100"
+			bind:value={percentage}
+			min="0"
+			max="100"
 			type="number"
 			placeholder="Percentage"
 		/>
@@ -78,7 +87,12 @@
 <div class="grid grid-cols-10 m-8 gap-1 w-fit">
 	{#each Array(101) as _, i}
 		<div
-			class="w-8 h-8 flex justify-center items-center {generateRandomBool(i, user, feature, result)
+			class="w-8 h-8 flex card justify-center items-center {generateRandomBool(
+				i,
+				user,
+				feature,
+				result
+			)
 				? 'variant-ghost-success'
 				: 'variant-ghost-surface'}"
 		>
@@ -91,16 +105,19 @@
 	<span>Test</span>
 	<div class="card p-2 variant-ghost-surface">
 		{testTrue} got, {testFalse} didn't ({(testTrue / (testTrue + testFalse)) * 100 || '?? '}%)<br />
-		Percentage should be close to <input
+		Percentage should be close to
+		<input
 			class="w-fit mx-1 input variant-form-material"
-			bind:value={percentage} min="0" max="100"
+			bind:value={percentage}
+			min="0"
+			max="100"
 			type="number"
 			placeholder="Percentage"
 		/>%.<br />
-	<label class="flex items-center space-x-2">
-		<input class="checkbox" type="checkbox" bind:checked={testAnimated} />
-		<p>Animate</p>
-	</label>
+		<label class="flex items-center space-x-2">
+			<input class="checkbox" type="checkbox" bind:checked={testAnimated} />
+			<p>Animate</p>
+		</label>
 	</div>
 	<div class="flex gap-1">
 		<button
@@ -116,7 +133,7 @@
 			on:click={async () => {
 				for (let index = 0; index < 10; index++) {
 					test();
-				if (testAnimated) await sleep(100);
+					if (testAnimated) await sleep(100);
 				}
 			}}>Test 10x</button
 		>
@@ -125,7 +142,7 @@
 			on:click={async () => {
 				for (let index = 0; index < 100; index++) {
 					test();
-				if (testAnimated) await sleep(10);
+					if (testAnimated) await sleep(10);
 				}
 			}}>Test 100x</button
 		>
@@ -134,15 +151,16 @@
 			on:click={async () => {
 				for (let index = 0; index < 1000; index++) {
 					test();
-				if (testAnimated) await sleep(1);
+					if (testAnimated) await sleep(1);
 				}
 			}}>Test 1000x</button
 		>
 		<button
 			class="btn variant-filled-surface"
-			on:click={async() => {
+			on:click={async () => {
 				for (let index = 0; index < 10000; index++) {
 					test();
+					if (testAnimated) await sleep(0);
 				}
 			}}>Test 10000x</button
 		>

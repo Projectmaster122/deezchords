@@ -5,7 +5,7 @@
 	 */
 
 	import { createEventDispatcher, setContext } from 'svelte';
-	import { dndzone, type Options,  } from 'svelte-dnd-action';
+	import { dndzone, type Options } from 'svelte-dnd-action';
 
 	// Types
 	import type { CssClasses } from '@skeletonlabs/skeleton';
@@ -75,7 +75,14 @@
 	on:keyup
 >
 	<!-- Tab List -->
-	<div class="tab-list {classesList}" role="tablist" aria-labelledby={labelledby} use:dndzone={options} on:consider={(e) => dispatch('consider', e)} on:finalize={(e) => dispatch('finalize', e)}>
+	<div
+		class="tab-list {classesList}"
+		role="tablist"
+		aria-labelledby={labelledby}
+		use:dndzone={options}
+		on:consider={(e) => dispatch('consider', e)}
+		on:finalize={(e) => dispatch('finalize', e)}
+	>
 		<slot />
 	</div>
 	<!-- Tab Panel -->

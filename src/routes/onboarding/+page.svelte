@@ -30,14 +30,14 @@
 	let doneCorsium: boolean = false;
 
 	onMount(() => {
-		promCorsium = corsiumPing("Initial ping");
+		promCorsium = corsiumPing('Initial ping');
 		promCorsium.then((v) => (doneCorsium = v));
 
 		setTimeout(() => {
 			iconAnimation = false;
 
-			promCorsium = corsiumPing("Heartbeat ping for onboarding");
-		promCorsium.then((v) => (doneCorsium = v));
+			promCorsium = corsiumPing('Heartbeat ping for onboarding');
+			promCorsium.then((v) => (doneCorsium = v));
 		}, 5 * 1000);
 	});
 </script>
@@ -73,14 +73,14 @@
 					You'll need a Discord account to get started. Steps you already completed will be skipped.
 				</p>
 			</Step>
-			{#await corsiumPing("Initial UI ping") then res}
+			{#await corsiumPing('Initial UI ping') then res}
 				{#if !res}
 					<Step locked={!doneCorsium}>
 						<svelte:fragment slot="header">Get CORSium</svelte:fragment>
 						<p>
-							CORSium is essential for Deez Chords, as it allows communication between Deez Chords and
-							Discord. It's available for all major operating systems and a one-click install. It can
-							be completely configured or uninstalled from within Deez Chords.
+							CORSium is essential for Deez Chords, as it allows communication between Deez Chords
+							and Discord. It's available for all major operating systems and a one-click install.
+							It can be completely configured or uninstalled from within Deez Chords.
 						</p>
 						<!-- TODO: Get CORSium -->
 					</Step>

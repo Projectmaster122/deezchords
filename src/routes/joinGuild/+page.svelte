@@ -24,12 +24,16 @@
 	let code = '';
 </script>
 
-<div class="flex h-full m-4 rounded-container-token justify-center items-center bg-cover bg-no-repeat bg-center">
+<div
+	class="flex h-full m-4 rounded-container-token justify-center items-center bg-cover bg-no-repeat bg-center"
+>
 	<div class="card p-4 variant-ghost-surface-surface space-y-2 max-w-2xl">
 		<header class="font-bold text-2xl">Join a guild</header>
 		<p>
 			You can join a guild by using the invite code below. Alternatively, use the sidebar menu to
-			access publicly available guilds. See <a href="/joinGuild/public" class="anchor">public guilds</a>.
+			access publicly available guilds. See <a href="/joinGuild/public" class="anchor"
+				>public guilds</a
+			>.
 		</p>
 		<input
 			type="text"
