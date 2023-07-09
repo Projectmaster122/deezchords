@@ -6,7 +6,7 @@
 
 <aside class="alert variant-ghost-warning max-w-2xl">
 	<div class="alert-message">
-		<h3 class="h3">CORSium not connected.</h3>
+		<h3 class="h3">Failed to link with CORSium</h3>
 		<p>
 			If CORSium is running, try refreshing the page or restarting it. CORSium needs to connect in
 			order for you to change settings. There currently exists a bug that prevents you from using

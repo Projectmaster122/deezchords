@@ -4,7 +4,7 @@
 	import { mdiPlus } from '@mdi/js';
 	import { Avatar } from '@skeletonlabs/skeleton';
 	import GuildJoinScreen from './GuildJoinScreen.svelte';
-	import type { IGuild, IInvite } from '$lib/api/types/guild';
+	import type { IGuild, IInvite } from '$lib/api/icons/guild';
 	import cdnGuildSplash from '$lib/api/cdn/guildSplash';
 
 	currentTabStore.set(commonTabs.joinGuild);

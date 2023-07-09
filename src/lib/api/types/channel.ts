@@ -1,7 +1,6 @@
 import {
 	mdiBullhorn,
 	mdiCastAudio,
-	mdiChat,
 	mdiFolder,
 	mdiForum,
 	mdiMessage,
@@ -113,6 +112,10 @@ export const EDNChannelType = [
 	'Group chat', // GROUP_DM
 	'Category', // GUILD_CATEGORY
 	'Announcement', // GUILD_ANNOUNCEMENT
+	null,
+	null,
+	null,
+	null, // [4] empty
 	'Announcement Thread', // ANNOUNCEMENT_THREAD
 	'Public Thread', // PUBLIC_THREAD
 	'Private Thread', // PRIVATE_THREAD
@@ -129,6 +132,10 @@ export const EIChannelType = [
 	mdiMessage, // GROUP_DM
 	mdiShape, // GUILD_CATEGORY
 	mdiBullhorn, // GUILD_ANNOUNCEMENT
+	null,
+	null,
+	null,
+	null, // [4] empty
 	mdiMessageSettings, // ANNOUNCEMENT_THREAD
 	mdiMessageReply, // PUBLIC_THREAD
 	mdiMessageTextLock, // PRIVATE_THREAD

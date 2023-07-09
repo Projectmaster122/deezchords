@@ -5,6 +5,7 @@ export default async function tokenValid(customToken?: string) {
 		'GET',
 		'https://discord.com/api/v10/users/@me',
 		{ short: 'Checking token' },
+		1,
 		undefined,
 		undefined,
 		undefined,

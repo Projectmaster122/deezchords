@@ -15,20 +15,20 @@
 		accessCode = corsiumAccessCode();
 
 		accessCode.then((res) => {
-			if (!res) return;
+			/* if (!res) return;
 
 			let validate: Promise<false | { valid: boolean; timeout: number }> = corsiumValidateCode(
 				res.code
 			);
 			let iv = setInterval(() => {
-				validate = corsiumValidateCode(res.code);
+				// validate = corsiumValidateCode(res.code);
 			}, 1000);
 			validate.then((vRes) => {
 				if (vRes && vRes.valid) {
 					clearInterval(iv);
 					goto(`/proxy/config/${res.code}`);
 				}
-			});
+			}); */
 		});
 	});
 </script>

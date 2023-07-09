@@ -1,4 +1,4 @@
-import { mdiHome, mdiKey, mdiArrowDecision, mdiPlus } from '@mdi/js';
+import { mdiHome, mdiKey, mdiArrowDecision, mdiPlus, mdiAccount } from '@mdi/js';
 import { currentTabStore, tabStore } from './stores';
 import type { ITab } from './types';
 import { goto } from '$app/navigation';
@@ -51,6 +51,15 @@ export const commonTabs: {
 		url: ['/joinGuild', '/joinGuild/[code]'],
 		icon: mdiPlus,
 		context: { text: 'Deez Chords!' }
+	},
+	onboarding: {
+		title: 'Hello there!',
+		url: ['/onboarding'],
+		icon: mdiAccount,
+		context: {
+			text: 'Deez Chords!',
+			sub: 'Use DZCH'
+		}
 	}
 };
 

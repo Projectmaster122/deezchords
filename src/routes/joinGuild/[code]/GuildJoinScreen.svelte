@@ -4,7 +4,7 @@
 	import cdnGuildIcon from '$lib/api/cdn/guildIcon';
 	import cdnUserAvatar from '$lib/api/cdn/userAvatar';
 	import { generatePfpInitials } from '$lib/api/custom/initials';
-	import type { IInvite } from '$lib/api/types/guild';
+	import type { IInvite } from '$lib/api/icons/guild';
 	import inviteGuild from '$lib/api/v10/global/inviteGuild';
 	import { Accordion, Avatar, CodeBlock } from '@skeletonlabs/skeleton';
 	import { blur } from 'svelte/transition';

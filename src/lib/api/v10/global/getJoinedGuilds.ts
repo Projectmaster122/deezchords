@@ -6,7 +6,8 @@ export default async function getJoinedGuilds(customToken?: string) {
 	const output = await request<IGuild[]>(
 		'GET',
 		'https://discord.com/api/v10/users/@me/guilds',
-		{ short: 'Getting user data' },
+		{ short: 'Getting user data', long: 'Joined guilds' },
+		1,
 		undefined,
 		undefined,
 		undefined,

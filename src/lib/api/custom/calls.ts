@@ -1,83 +1,137 @@
-import { loadingStore, settingsStore, tokenStore } from '$lib/stores';
-import { toastStore } from '@skeletonlabs/skeleton';
-import axios from 'axios';
+import {
+	loadingStore,
+	requestAmountStore,
+	requestBanStore,
+	settingsStore,
+	tokenStore
+} from '$lib/stores';
 import type { AxiosHeaders } from 'axios';
 import { get } from 'svelte/store';
-import req from '$lib/api/custom/calls';
+import { sleep } from '$lib/common';
+import { toastStore } from '@skeletonlabs/skeleton';
 
 export default async function request<Response>(
 	method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH',
 	url: string,
 	details: { short: string; long?: string },
-	params?: any,
+	maxReq: number,
+	params?: {
+		[key: string]: any;
+	},
 	data?: any,
 	headers?: AxiosHeaders,
 	customToken?: string
 ): Promise<{ resp: Response; fail: boolean }> {
-	const progressToken = 'blah'; //crypto.randomUUID(); TODO: use uuid
+	let id = 0;
 	try {
-		const response = await axios.request({
-			method,
-			url,
-			params,
-			timeout: (get(settingsStore).timeout || 30) * 1000,
-			data,
-			headers: { ...headers, Authorization: customToken || get(tokenStore)[0] },
-			onDownloadProgress: (progressEvent) => {
-				const { total, loaded } = progressEvent;
-				const { short, long } = details;
-				const ticker = progressEvent.estimated ? String(progressEvent.estimated) : undefined;
+		if (get(requestBanStore).requestsLeft <= 4000)
+			throw new Error('Too many requests, prevented potential ban');
 
-				loadingStore.update((state) => ({
-					...state,
-					[progressToken]: {
-						min: 0,
-						max: total || 1024,
-						value: loaded,
-						name: short,
-						description: long,
-						type: 'download',
-						ticker
-					}
-				}));
-			},
-			onUploadProgress: (progressEvent) => {
-				loadingStore.update((state) => {
-					state[progressToken] = {
-						min: 0,
-						max: progressEvent.total || 1024,
-						value: progressEvent.loaded,
-						name: details.short,
-						description: details.long,
-						type: 'upload',
-						ticker: progressEvent.estimated ? String(progressEvent.estimated) : undefined
-					};
-					return state;
-				});
-			}
+		requestAmountStore.update((state) => {
+			return { ...state, ...{ total: state.total + 1, queued: state.queued + 1 } };
+		});
+		while (get(requestAmountStore).open >= maxReq) {
+			await sleep(10);
+		}
+		requestAmountStore.update((state) => {
+			return { ...state, ...{ open: state.open + 1, queued: state.queued - 1 } };
 		});
 
-		console.log(response.headers);
-		if (response.status === 429 || response.headers['x-ratelimit-remaining'] <= 2) {
-			const dur = response.headers['x-ratelimit-reset-after'] as number;
+		loadingStore.update((state) => {
+			id = state.push({
+				short: details.short,
+				long: details.long || '-',
+				state: 'wait'
+			});
+			return state;
+		});
+
+		const ws = new WebSocket('ws://127.0.0.1:6463/cors?c=' + details.short);
+		ws.onopen = () => {
+			ws.send(
+				JSON.stringify({
+					method: method,
+					url: url,
+					params: Object.entries(params || {}).reduce(
+						(acc, [key, value]) => ({ ...acc, [key]: String(value) }),
+						{}
+					),
+					maxReq: maxReq,
+					timeout: (get(settingsStore).timeout || 30) * 1000,
+					data: data || '',
+					headers: { ...headers, Authorization: customToken || get(tokenStore)[0] }
+				})
+			);
+		};
+
+		const response = JSON.parse(await waitForMessage(ws)) as {
+			status: number;
+			data: string;
+			headers: {
+				[key: string]: any;
+			};
+		};
+		ws.close();
+
+		requestAmountStore.update((state) => {
+			return { ...state, ...{ open: state.open - 1, done: state.done + 1 } };
+		});
+
+		if (
+			response.status === 429 ||
+			typeof response.headers['x-ratelimit-remaining'] === 'number' ||
+			typeof JSON.parse(response.data || '{}').retry_after === 'number'
+		) {
+			const dur =
+				(response.headers['x-ratelimit-reset-after'] as number) ||
+				(JSON.parse(response.data || '{}').retry_after as number) ||
+				5;
+			console.error('Rate limited, trying again');
 			setTimeout(() => {
-				toastStore.trigger({
-					message: `Too many requests, waiting ${dur}s.`,
-					background: 'variant-filled-warning',
-					timeout: dur * 1000,
-					hideDismiss: true
-				});
+				request<Response>(method, url, details, maxReq, params, data, headers, customToken);
 			}, dur);
-			request<Response>(method, url, details, params, data, headers, customToken);
 		}
 
-		const resp = { resp: response.data, fail: false };
+		loadingStore.update((state) => {
+			state[id] = {
+				...state[id],
+				state: 'done'
+			};
+			return state;
+		});
+		const resp = { resp: JSON.parse(response.data), fail: false };
 		if (get(settingsStore).debug) console.dir(resp);
 		return resp;
 	} catch (err) {
+		requestAmountStore.update((state) => {
+			return { ...state, ...{ open: state.open - 1, fail: state.fail + 1 } };
+		});
+		requestBanStore.update((state) => {
+			return {
+				...state,
+				requestsLeft: state.requestsLeft - 1
+			};
+		});
+		loadingStore.update((state) => {
+			state[id] = {
+				...state[id],
+				state: 'fail'
+			};
+			return state;
+		});
+
 		const resp = { resp: err, fail: true };
 		if (get(settingsStore).debug) console.dir(resp);
 		//@ts-expect-error Error handling should be checked using fail prop
 		return resp;
 	}
+}
+
+function waitForMessage(ws: WebSocket): Promise<string> {
+	return new Promise((resolve) => {
+		ws.onmessage = (event) => {
+			const msg = event.data;
+			resolve(msg);
+		};
+	});
 }

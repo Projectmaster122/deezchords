@@ -21,7 +21,7 @@ func Ping(w http.ResponseWriter, r *http.Request, upgrader websocket.Upgrader) {
 		"nonce": nil,
 	})
 
-	log.Info("Sent ping on request")
+	log.Info("Sent ping on request", "context", r.URL.Query().Get("c"))
 
 	err = conn.Close()
 	if err != nil {

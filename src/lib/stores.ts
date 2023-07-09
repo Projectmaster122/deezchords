@@ -13,6 +13,7 @@ import { writable } from 'svelte/store';
 import type { ITab } from './types';
 import { commonTabs } from './tabs';
 import { localStorageStore } from '@skeletonlabs/skeleton';
+import dayjs, { Dayjs } from 'dayjs';
 
 export const scrollStore = writable<{ x: number; y: number }>({ x: 0, y: 0 });
 export const tabStore = writable<ITab[]>([
@@ -106,17 +107,26 @@ export const currentTabStore = writable<ITab>({
 	},
 	id: -1
 });
-export const loadingStore = writable<{
-	[uuid: string]: {
-		min: number;
-		max: number;
-		value: number;
-		name: string;
-		description?: string;
-		type: 'download' | 'upload' | 'process';
-		ticker?: string;
-	};
-}>();
+export const loadingStore = writable<
+	{
+		short: string;
+		long: string;
+		state: 'wait' | 'done' | 'fail';
+	}[]
+>([]);
+export const requestAmountStore = writable<{
+	open: number;
+	total: number;
+	queued: number;
+	done: number;
+	fail: number;
+}>({
+	open: 0,
+	total: 0,
+	queued: 0,
+	done: 0,
+	fail: 0
+});
 export const searchStore = writable<
 	{
 		title: string;
@@ -133,6 +143,10 @@ export const settingsStore = localStorageStore<{
 	timeout: 30,
 	debug: true // FIXME: Disable by default
 });
+export const requestBanStore = localStorageStore<{
+	theGreatReset: Dayjs;
+	requestsLeft: number;
+}>('requestBan', { requestsLeft: 10000, theGreatReset: dayjs().add(10, 'm') });
 
 // TODO: Merge to cookie if there's a way to not send it to the server when requesting the page
 export const tokenStore = localStorageStore<string[]>('token', []);

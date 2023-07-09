@@ -81,7 +81,7 @@ func Access(w http.ResponseWriter, r *http.Request, upgrader websocket.Upgrader)
 func AccessCodeValid(code string) (bool, time.Time) {
 	for _, v := range ValidCodes {
 		if v.Timeout.Before(time.Now()) {
-			ValidCodes = append(ValidCodes[:len(ValidCodes)-1])
+			ValidCodes = ValidCodes[:len(ValidCodes)-1]
 			continue
 		}
 		if v.Code == code {

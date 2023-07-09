@@ -15,3 +15,12 @@ func RandomCode() string {
 	}
 	return code
 }
+
+func GetIndex(slice []string, target string) int {
+	for i, value := range slice {
+		if value == target {
+			return i
+		}
+	}
+	return -1 // Item not found
+}

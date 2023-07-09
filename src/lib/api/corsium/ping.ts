@@ -1,7 +1,7 @@
 import { sleep } from "$lib/common";
 
-export default async function corsiumPing(): Promise<boolean> {
-	const ws = new WebSocket('ws://127.0.0.1:6463/ping');
+export default async function corsiumPing(c: string): Promise<boolean> {
+	const ws = new WebSocket('ws://127.0.0.1:6463/ping?c=' + c);
 	let received = 2
 	let timePassed = 0
 	

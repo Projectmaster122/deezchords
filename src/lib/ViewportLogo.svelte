@@ -18,7 +18,7 @@
 	<!--
 		Meet Roji, the Logo. She's very friendly!
 	-->
-	<svg viewBox="-1.5 -3 10 10" class={size} xmlns="http://www.w3.org/2000/svg">
+	<svg viewBox="-0.5 -0.5 8 5" class={size} xmlns="http://www.w3.org/2000/svg">
 		{#if backdrop}
 			<path
 				d={custom ||

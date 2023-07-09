@@ -1,7 +1,7 @@
 <script lang="ts">
 	import cdnUserAvatar from '$lib/api/cdn/userAvatar';
 	import { generatePfpInitials } from '$lib/api/custom/initials';
-	import type { IUser } from '$lib/api/types/user';
+	import type { IUser } from '$lib/api/icons/user';
 	import getThisUser from '$lib/api/v10/global/getThisUser';
 	import { Avatar, CodeBlock } from '@skeletonlabs/skeleton';
 	import { blur } from 'svelte/transition';

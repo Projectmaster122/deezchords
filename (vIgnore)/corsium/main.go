@@ -3,13 +3,14 @@ package main
 import (
 	"net/http"
 	"os"
+	"time"
 
 	"fyne.io/systray"
-	"fyne.io/systray/example/icon"
 	"github.com/charmbracelet/log"
 	"github.com/gorilla/websocket"
 	"github.com/ncruces/zenity"
 
+	"tizu/deezchords/corsium/magic"
 	"tizu/deezchords/corsium/requests"
 )
 
@@ -36,17 +37,18 @@ func main() {
 	http.HandleFunc("/codeValid", func(w http.ResponseWriter, r *http.Request) {
 		requests.Access(w, r, upgrader)
 	})
+	// ---
+	http.HandleFunc("/cors", func(w http.ResponseWriter, r *http.Request) {
+		requests.CrossOrigin(w, r, upgrader)
+	})
 
 	go systray.Run(func() {
-		systray.SetIcon(icon.Data)
 		systray.SetTitle("CORSium")
 		systray.SetTooltip("The official Deez Chords! proxy")
 
 		mQuit := systray.AddMenuItem("Quit", "Quit CORSium completely")
-		mQuit.SetIcon(icon.Data)
 
 		mCode := systray.AddMenuItem("Active codes", "View active codes")
-		mCode.SetIcon(icon.Data)
 
 		log.Info("Setting up sys tray")
 
@@ -72,6 +74,13 @@ func main() {
 	}, func() {
 		log.Info("Cleaning up sys tray")
 	})
+
+	go func() {
+		for {
+			time.Sleep(1 * time.Second)
+			magic.RequestsThisSecond = 0
+		}
+	}()
 
 	log.Info("You're ready to go! 🎉")
 	err := http.ListenAndServe(":6463", nil)
